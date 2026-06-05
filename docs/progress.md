@@ -68,3 +68,32 @@ A running log of what was built, decisions made, and concepts learned.
 
 ## Phase 3 — Packet Analysis
 **Status:** 🔲 Not started
+
+## Security Findings & Remediation
+**Status:** ✅ Complete
+
+### Finding 1 — NetBIOS (Port 139)
+- **Severity:** Medium
+- **Found on:** 10.0.0.xxx (own machine, IP redacted)
+- **What it is:** NetBIOS over TCP/IP — a legacy Windows networking protocol
+  used for name resolution and file sharing on older networks
+- **Why it's risky:** Unnecessary attack surface, used in older exploits like
+  EternalBlue. Not needed on a single-user home machine with no file sharing.
+- **Fix:** Disabled NetBIOS over TCP/IP via Network Adapter settings →
+  TCP/IPv4 → Advanced → WINS tab → Disable NetBIOS over TCP/IP
+- **Result:** Port 139 no longer appears in scan results ✅
+- **Reversible:** Yes — same WINS tab, set back to Default or Enable
+
+### Finding 2 — SMB (Port 445)
+- **Severity:** Low (in current configuration)
+- **Found on:** 10.0.0.xxx (own machine, IP redacted)
+- **What it is:** SMB 2/3 (Server Message Block) — Windows file sharing protocol
+- **Why it's worth noting:** Port 445 was the attack vector for the 2017
+  WannaCry ransomware attack via SMB 1.0. However SMB 1.0 was already disabled
+  on this machine. SMB 2/3 is significantly more secure.
+- **Decision:** Left enabled. SMB 1.0 is disabled, SMB 2/3 risk is low on a
+  home network with no active file sharing. Disabling SMB 2/3 entirely is an
+  option via PowerShell but unnecessary given the current threat model.
+- **Lesson:** Security decisions require context. Closing every open port isn't
+  always the right call — understanding *why* something is open matters more.
+  
