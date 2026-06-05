@@ -37,7 +37,6 @@ A running log of what was built, decisions made, and concepts learned.
 ---
 
 ## Phase 2 — Port Scanner
-## Phase 2 — Port Scanner
 **Status:** ✅ Complete
 
 ### What was built
@@ -60,7 +59,7 @@ A running log of what was built, decisions made, and concepts learned.
 - SMB, NetBIOS, RDP, VNC — common attack vectors
 
 ### Real finding
-- My own machine (10.0.0.187) has ports 139 (NetBIOS) and 445 (SMB) open
+- My own machine (10.0.0.xxx) has ports 139 (NetBIOS) and 445 (SMB) open
 - These are Windows file sharing ports and a known attack surface
 - SMB port 445 was exploited in the 2017 WannaCry ransomware attack
 
@@ -90,12 +89,14 @@ A running log of what was built, decisions made, and concepts learned.
 - Broadcast addressing — 255.255.255.255 reaches all hosts on the network
 
 ### Real findings from capture
-- 10.0.0.184 is an LG webOS TV broadcasting via mDNS/AirPlay on port 5353
-- 10.0.0.55 is a Google Cast device (Chromecast) — PC actively talking
+- 10.0.0.xxx is an LG webOS TV broadcasting via mDNS/AirPlay on port 5353
+- 10.0.0.xxx is a Google Cast device (Chromecast) — PC actively talking
   to it on port 8009
-- 10.0.0.183 is an Apple device advertising _companion-link (AirPlay/Handoff)
+- 10.0.0.xxx is an Apple device advertising _companion-link (AirPlay/Handoff)
 - A device broadcast to 255.255.255.255:9999 — likely a TP-Link smart
   home device
+
+---
 
 ## Security Findings & Remediation
 **Status:** ✅ Complete
@@ -124,3 +125,8 @@ A running log of what was built, decisions made, and concepts learned.
   option via PowerShell but unnecessary given the current threat model.
 - **Lesson:** Security decisions require context. Closing every open port isn't
   always the right call — understanding *why* something is open matters more.
+
+---
+
+## Phase 4 — Device Monitoring & Alerts
+**Status:** 🔲 Not started
