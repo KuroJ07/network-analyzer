@@ -66,8 +66,36 @@ A running log of what was built, decisions made, and concepts learned.
 
 ---
 
-## Phase 3 — Packet Analysis
-**Status:** 🔲 Not started
+## Phase 3 — Packet Capture
+**Status:** ✅ Complete
+
+### What was built
+- `src/scanners/packet_capture.py` — captures live packets using Scapy,
+  identifies ARP, DNS, ICMP, TCP, and UDP traffic
+- Updated `src/main.py` — added optional packet capture prompt after
+  host and port scanning
+
+### Key decisions
+- Used Scapy's sniff() with a timeout and packet count limit to keep
+  capture controlled and safe
+- Filtered for meaningful protocols only — ignored raw/unknown packets
+- Required admin/root privileges — documented as a known requirement
+
+### Network+ concepts this covers
+- Packet structure and protocol layers (Layer 2, 3, 4)
+- TCP flags — SYN, ACK, PSH, FIN and what they mean
+- UDP vs TCP — connectionless vs connection-oriented
+- mDNS (port 5353) — how devices discover each other without central DNS
+- Multicast addressing — 224.0.0.251 is the mDNS multicast group
+- Broadcast addressing — 255.255.255.255 reaches all hosts on the network
+
+### Real findings from capture
+- 10.0.0.184 is an LG webOS TV broadcasting via mDNS/AirPlay on port 5353
+- 10.0.0.55 is a Google Cast device (Chromecast) — PC actively talking
+  to it on port 8009
+- 10.0.0.183 is an Apple device advertising _companion-link (AirPlay/Handoff)
+- A device broadcast to 255.255.255.255:9999 — likely a TP-Link smart
+  home device
 
 ## Security Findings & Remediation
 **Status:** ✅ Complete
@@ -96,4 +124,3 @@ A running log of what was built, decisions made, and concepts learned.
   option via PowerShell but unnecessary given the current threat model.
 - **Lesson:** Security decisions require context. Closing every open port isn't
   always the right call — understanding *why* something is open matters more.
-  
