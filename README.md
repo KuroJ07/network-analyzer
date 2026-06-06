@@ -80,6 +80,8 @@ You will be prompted
 ---
 
 ## Project Structure
+
+```
 network-analyzer/
 ├── src/
 │   ├── scanners/
@@ -96,6 +98,7 @@ network-analyzer/
 ├── tests/
 ├── requirements.txt
 └── README.md
+```
 
 ---
 
