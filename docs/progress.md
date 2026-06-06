@@ -129,4 +129,33 @@ A running log of what was built, decisions made, and concepts learned.
 ---
 
 ## Phase 4 — Device Monitoring & Alerts
-**Status:** 🔲 Not started
+**Status:** ✅ Complete
+
+### What was built
+- `src/utils/db.py` — SQLite database helper, creates and manages two tables:
+  devices (known hosts) and events (join/leave log)
+- `src/scanners/monitor.py` — continuous monitor that scans on an interval,
+  detects changes, and alerts on new or leaving devices
+- Updated `src/main.py` — added a menu system so the user can choose which
+  mode to run
+
+### Key decisions
+- Used SQLite for persistence — no external database needed, file-based,
+  portable, and standard in Python
+- Set scan interval to 60 seconds — frequent enough to catch changes,
+  not so aggressive it hammers the network
+- Distinguished between "new device never seen before" vs "known device
+  rejoined" — different alert levels for each
+
+### Network+ concepts this covers
+- Network baselining — knowing what's normal so you can spot what isn't
+- Device lifecycle on a network — DHCP lease, sleep/wake cycles
+- Persistent logging — how network monitoring tools like SIEM work
+- Broadcast domain — all devices visible within the /24 subnet
+
+### Real findings from monitor
+- 9 devices tracked and persisted to database on first run
+- 10.0.0.xxx (Apple device) detected joining the network between scan #1
+  and scan #2, then leaving by scan #3 — a real sleep/wake cycle caught
+  in real time
+- Full timestamped event log recorded for all activity
