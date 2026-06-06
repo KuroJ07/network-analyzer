@@ -14,10 +14,18 @@ def display_hosts(hosts: list[dict]) -> None:
     table = Table(title="Online Hosts")
     table.add_column("IP Address", style="cyan", no_wrap=True)
     table.add_column("Hostname", style="green")
+    table.add_column("MAC Address", style="dim")
+    table.add_column("Vendor", style="yellow")
     table.add_column("Status", style="bold green")
 
     for host in sorted(hosts, key=lambda x: x["ip"]):
-        table.add_row(host["ip"], host["hostname"], "● Online")
+        table.add_row(
+            host["ip"],
+            host["hostname"],
+            host.get("mac", "Unknown"),
+            host.get("vendor", "Unknown"),
+            "● Online"
+        )
 
     console.print(table)
     console.print(f"\n[bold]Found {len(hosts)} online host(s)[/bold]\n")
