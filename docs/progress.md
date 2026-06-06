@@ -139,6 +139,26 @@ A running log of what was built, decisions made, and concepts learned.
 - Updated `src/main.py` — added a menu system so the user can choose which
   mode to run
 
+  ## MAC Address & Vendor Lookup
+**Status:**  Complete
+
+### What was built
+- Updated `src/scanners/host_scanner.py` — after ping sweep, reads ARP cache
+  to get each device's MAC address, then queries macvendors.com API to identify
+  the manufacturer
+
+### Network+ concepts this covers
+- MAC addresses and OUI (Organizationally Unique Identifier)
+- ARP cache — how the OS maps IP addresses to MAC addresses
+- MAC randomization — modern devices (Apple, Android) rotate MAC addresses
+  for privacy, which is why some vendors show as Unknown
+
+### Real findings
+- 10.0.0.xxx — Commscope (Xfinity router/modem)
+- 10.0.0.xxx — Wyze Labs (smart home camera)
+- 10.0.0.xxx — Beijing Roborock Technology (robot vacuum)
+- Several devices show Unknown Vendor due to MAC randomization
+
 ### Key decisions
 - Used SQLite for persistence — no external database needed, file-based,
   portable, and standard in Python
