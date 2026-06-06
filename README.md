@@ -63,12 +63,12 @@ pip install -r requirements.txt
 
 ### Run
 
-```bash
+```
 cd src
 python main.py
 ```
 
-You will be prompted to choose a mode:
+You will be prompted
 
 - **1** — Full scan (host discovery + port scanning)
 - **2** — Packet capture only
