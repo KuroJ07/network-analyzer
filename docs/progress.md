@@ -139,7 +139,7 @@ A running log of what was built, decisions made, and concepts learned.
 - Updated `src/main.py` — added a menu system so the user can choose which
   mode to run
 
-  ## MAC Address & Vendor Lookup
+## MAC Address & Vendor Lookup
 **Status:**  Complete
 
 ### What was built
@@ -147,7 +147,7 @@ A running log of what was built, decisions made, and concepts learned.
   to get each device's MAC address, then queries macvendors.com API to identify
   the manufacturer
 
-  ## Unit Tests
+## Unit Tests
 **Status:**  Complete
 
 ### What was built
