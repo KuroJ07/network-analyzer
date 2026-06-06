@@ -5,7 +5,7 @@ A running log of what was built, decisions made, and concepts learned.
 ---
 
 ## Phase 1 — Host Discovery
-**Status:** ✅ Complete
+**Status:**  Complete
 
 ### What was built
 - `src/utils/network.py` — detects local IP using a UDP socket trick,
@@ -37,7 +37,7 @@ A running log of what was built, decisions made, and concepts learned.
 ---
 
 ## Phase 2 — Port Scanner
-**Status:** ✅ Complete
+**Status:**  Complete
 
 ### What was built
 - `src/scanners/port_scanner.py` — scans 16 common ports on each live host,
@@ -66,7 +66,7 @@ A running log of what was built, decisions made, and concepts learned.
 ---
 
 ## Phase 3 — Packet Capture
-**Status:** ✅ Complete
+**Status:**  Complete
 
 ### What was built
 - `src/scanners/packet_capture.py` — captures live packets using Scapy,
@@ -99,7 +99,7 @@ A running log of what was built, decisions made, and concepts learned.
 ---
 
 ## Security Findings & Remediation
-**Status:** ✅ Complete
+**Status:**  Complete
 
 ### Finding 1 — NetBIOS (Port 139)
 - **Severity:** Medium
@@ -129,7 +129,7 @@ A running log of what was built, decisions made, and concepts learned.
 ---
 
 ## Phase 4 — Device Monitoring & Alerts
-**Status:** ✅ Complete
+**Status:**  Complete
 
 ### What was built
 - `src/utils/db.py` — SQLite database helper, creates and manages two tables:

@@ -9,26 +9,26 @@ networking concepts like IP addressing, subnetting, port scanning, and packet an
 
 ## Features
 
-### Phase 1 — Host Discovery ✅
+### Phase 1 — Host Discovery 
 - Detects your local IP and subnet automatically
 - Scans all 254 hosts in your /24 subnet using ICMP ping
 - Resolves hostnames via reverse DNS
 - Displays results in a formatted table
 - Parallel scanning with 50 threads for speed
 
-### Phase 2 — Port Scanner ✅
+### Phase 2 — Port Scanner 
 - Scans 16 common ports on each live host
 - Identifies running services by port number
 - Flags potentially risky open ports (SMB, RDP, Telnet, VNC)
 - Found and remediated real open ports on my own machine
 
-### Phase 3 — Packet Capture ✅
+### Phase 3 — Packet Capture 
 - Captures live network traffic using Scapy
 - Identifies protocols in use: ARP, DNS, ICMP, TCP, UDP
 - Decodes mDNS device advertisements and DNS queries
 - Displays a protocol summary after each capture session
 
-### Phase 4 — Device Monitoring & Alerts ✅
+### Phase 4 — Device Monitoring & Alerts 
 - Continuously monitors the network on a configurable interval
 - Detects new devices joining or leaving the network in real time
 - Persists device history and event log to a local SQLite database
