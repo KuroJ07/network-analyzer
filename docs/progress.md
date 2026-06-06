@@ -170,6 +170,36 @@ pytest tests/ -v
 - Industry standard — almost every professional codebase has a test suite
 - 18/18 passing on first run
 
+## Email Alerts
+**Status:**  Complete
+
+### What was built
+- `src/utils/alerts.py` — sends email via Gmail SMTP when a device is
+  detected joining the network
+- Updated `src/scanners/monitor.py` — calls send_alert() after each
+  join event
+- `.env.example` — template showing required credentials without
+  exposing real values
+
+### Key decisions
+- Used Gmail App Password instead of account password — more secure,
+  can be revoked independently of the main account
+- Credentials stored in .env file which is gitignored — never touches
+  GitHub
+- Alert distinguishes between truly new devices vs known devices rejoining
+- Gracefully skips alerting if credentials are not configured
+
+### Network+ concepts this covers
+- SMTP protocol (port 465 with SSL) — how email is transmitted
+- SSL/TLS — encrypting the connection to Gmail's mail server
+- Application credentials and secure storage — never hardcode secrets
+
+### Security practices
+- .env file gitignored — credentials never committed to version control
+- .env.example committed instead — shows required variables safely
+- App Password scoped to this application only — can be revoked without
+  changing Gmail password
+
 ### Network+ concepts this covers
 - MAC addresses and OUI (Organizationally Unique Identifier)
 - ARP cache — how the OS maps IP addresses to MAC addresses
