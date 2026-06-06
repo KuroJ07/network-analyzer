@@ -5,6 +5,7 @@ from rich.table import Table
 from scanners.host_scanner import scan_subnet
 from utils.network import get_local_ip, get_subnet
 from utils.db import init_db, upsert_device, log_event, get_all_devices, get_recent_events
+from utils.alerts import send_alert
 
 console = Console()
 
@@ -107,6 +108,11 @@ def run_monitor(interval: int = 60):
                         f"[green]▲ Joined:[/green] "
                         f"[cyan]{ip}[/cyan] ({host['hostname']})"
                     )
+
+                # Send email alert
+                sent = send_alert(ip, host["hostname"], timestamp, is_new)
+                if sent:
+                    console.print(f"[dim]  → Alert email sent[/dim]")
 
             # Detect devices that left
             left_devices = previous_hosts - current_ips
