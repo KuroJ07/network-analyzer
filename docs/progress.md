@@ -147,6 +147,29 @@ A running log of what was built, decisions made, and concepts learned.
   to get each device's MAC address, then queries macvendors.com API to identify
   the manufacturer
 
+  ## Unit Tests
+**Status:**  Complete
+
+### What was built
+- `tests/test_network.py` — 10 tests covering get_local_ip() and get_subnet()
+- `tests/test_port_scanner.py` — 8 tests covering scan_port() and port constants
+
+### How to run
+pytest tests/ -v
+
+### What was tested
+- get_local_ip() returns a valid, non-empty IPv4 string
+- get_subnet() correctly zeros host bits and respects custom prefix lengths
+- scan_port() returns correct structure when a port is open
+- RISKY_PORTS is always a subset of COMMON_PORTS
+- All key well-known ports are present in COMMON_PORTS
+
+### Why tests matter
+- Catches broken code before it runs on a real network
+- Documents expected behavior — tests are a form of specification
+- Industry standard — almost every professional codebase has a test suite
+- 18/18 passing on first run
+
 ### Network+ concepts this covers
 - MAC addresses and OUI (Organizationally Unique Identifier)
 - ARP cache — how the OS maps IP addresses to MAC addresses
