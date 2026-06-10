@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Network Analyzer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #1a1d2e;
+      border-bottom: 1px solid #2d3748;
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      color: #63b3ed;
+      font-weight: 600;
+    }
+
+    header span {
+      font-size: 0.85rem;
+      color: #718096;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: #1a1d2e;
+      border: 1px solid #2d3748;
+      border-radius: 8px;
+      padding: 1.2rem;
+    }
+
+    .stat-card .label {
+      font-size: 0.75rem;
+      color: #718096;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #63b3ed;
+    }
+
+    .stat-card .sub {
+      font-size: 0.8rem;
+      color: #718096;
+      margin-top: 0.3rem;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .section-header h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #a0aec0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    button {
+      background: #2b6cb0;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+
+    button:hover { background: #3182ce; }
+    button:disabled { background: #2d3748; cursor: not-allowed; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1a1d2e;
+      border: 1px solid #2d3748;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th {
+      background: #171923;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.75rem;
+      color: #718096;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #2d3748;
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      border-bottom: 1px solid #1e2433;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #1e2433; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-green { background: #1c4532; color: #68d391; }
+    .badge-red { background: #742a2a; color: #fc8181; }
+    .badge-yellow { background: #744210; color: #f6ad55; }
+    .badge-blue { background: #1a365d; color: #63b3ed; }
+
+    .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .dot-green { background: #68d391; }
+    .dot-red { background: #fc8181; }
+
+    .loading { color: #718096; font-size: 0.875rem; padding: 1rem; }
+    .error { color: #fc8181; font-size: 0.875rem; padding: 1rem; }
+
+    #scan-status {
+      font-size: 0.8rem;
+      color: #718096;
+      margin-left: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🔍 Network Analyzer</h1>
+  <span id="last-updated">Loading...</span>
+</header>
+
+<div class="container">
+
+  <!-- Stats Row -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="label">Known Devices</div>
+      <div class="value" id="stat-devices">—</div>
+      <div class="sub">seen on this network</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Online Now</div>
+      <div class="value" id="stat-online">—</div>
+      <div class="sub">from last monitor scan</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Total Events</div>
+      <div class="value" id="stat-events">—</div>
+      <div class="sub">joins and leaves logged</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Risky Ports</div>
+      <div class="value" id="stat-risky">—</div>
+      <div class="sub">from last scan</div>
+    </div>
+  </div>
+
+  <!-- Live Scan -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Live Scan</h2>
+      <div>
+        <button id="scan-btn" onclick="runScan()">Run Scan</button>
+        <span id="scan-status"></span>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>IP Address</th>
+          <th>Hostname</th>
+          <th>MAC Address</th>
+          <th>Vendor</th>
+          <th>Open Ports</th>
+          <th>Risk</th>
+        </tr>
+      </thead>
+      <tbody id="scan-table">
+        <tr><td colspan="6" class="loading">Click "Run Scan" to scan your network</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Known Devices -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Known Devices</h2>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>IP Address</th>
+          <th>Hostname</th>
+          <th>First Seen</th>
+          <th>Last Seen</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="devices-table">
+        <tr><td colspan="5" class="loading">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Recent Events -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Recent Events</h2>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>IP Address</th>
+          <th>Hostname</th>
+          <th>Event</th>
+        </tr>
+      </thead>
+      <tbody id="events-table">
+        <tr><td colspan="4" class="loading">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+  async function loadDevices() {
+    try {
+      const res = await fetch("/api/devices");
+      const devices = await res.json();
+
+      const online = devices.filter(d => d.status === "online").length;
+      document.getElementById("stat-devices").textContent = devices.length;
+      document.getElementById("stat-online").textContent = online;
+
+      const tbody = document.getElementById("devices-table");
+      if (devices.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="loading">No devices recorded yet. Run the monitor first.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = devices.map(d => `
+        <tr>
+          <td>${d.ip}</td>
+          <td>${d.hostname}</td>
+          <td>${d.first_seen}</td>
+          <td>${d.last_seen}</td>
+          <td>
+            <span class="dot ${d.status === 'online' ? 'dot-green' : 'dot-red'}"></span>
+            ${d.status === 'online' ? 'Online' : 'Offline'}
+          </td>
+        </tr>
+      `).join("");
+    } catch (e) {
+      document.getElementById("devices-table").innerHTML =
+        `<tr><td colspan="5" class="error">Failed to load devices</td></tr>`;
+    }
+  }
+
+  async function loadEvents() {
+    try {
+      const res = await fetch("/api/events");
+      const events = await res.json();
+
+      document.getElementById("stat-events").textContent = events.length;
+
+      const tbody = document.getElementById("events-table");
+      if (events.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="loading">No events recorded yet.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = events.map(e => `
+        <tr>
+          <td>${e.timestamp}</td>
+          <td>${e.ip}</td>
+          <td>${e.hostname}</td>
+          <td>
+            <span class="badge ${e.event_type === 'joined' ? 'badge-green' : 'badge-red'}">
+              ${e.event_type === 'joined' ? '▲ Joined' : '▼ Left'}
+            </span>
+          </td>
+        </tr>
+      `).join("");
+    } catch (e) {
+      document.getElementById("events-table").innerHTML =
+        `<tr><td colspan="4" class="error">Failed to load events</td></tr>`;
+    }
+  }
+
+  async function runScan() {
+    const btn = document.getElementById("scan-btn");
+    const status = document.getElementById("scan-status");
+    const tbody = document.getElementById("scan-table");
+
+    btn.disabled = true;
+    status.textContent = "Scanning... this takes ~10 seconds";
+    tbody.innerHTML = `<tr><td colspan="6" class="loading">Scanning network...</td></tr>`;
+
+    try {
+      const res = await fetch("/api/scan");
+      const data = await res.json();
+
+      let riskyCount = 0;
+
+      tbody.innerHTML = data.hosts.map(h => {
+        const riskyPorts = h.ports.filter(p => p.risky);
+        riskyCount += riskyPorts.length;
+        const portList = h.ports.map(p =>
+          `<span class="badge ${p.risky ? 'badge-red' : 'badge-blue'}">${p.port}</span>`
+        ).join(" ");
+
+        return `
+          <tr>
+            <td>${h.ip}</td>
+            <td>${h.hostname}</td>
+            <td>${h.mac || "Unknown"}</td>
+            <td>${h.vendor || "Unknown"}</td>
+            <td>${portList || '<span style="color:#718096">None</span>'}</td>
+            <td>${riskyPorts.length > 0
+              ? `<span class="badge badge-red">⚠ ${riskyPorts.length} Risky</span>`
+              : `<span class="badge badge-green">Clean</span>`
+            }</td>
+          </tr>
+        `;
+      }).join("");
+
+      document.getElementById("stat-risky").textContent = riskyCount;
+      status.textContent = `Done — ${data.hosts.length} hosts found`;
+
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="6" class="error">Scan failed: ${e.message}</td></tr>`;
+      status.textContent = "";
+    }
+
+    btn.disabled = false;
+  }
+
+  function updateTimestamp() {
+    document.getElementById("last-updated").textContent =
+      "Last updated: " + new Date().toLocaleTimeString();
+  }
+
+  // Load on page open
+  loadDevices();
+  loadEvents();
+  updateTimestamp();
+
+  // Refresh devices and events every 30 seconds
+  setInterval(() => {
+    loadDevices();
+    loadEvents();
+    updateTimestamp();
+  }, 30000);
+</script>
+
+</body>
+</html>
