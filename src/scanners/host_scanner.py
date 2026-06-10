@@ -2,10 +2,23 @@ import subprocess
 import ipaddress
 import socket
 import re
+import os
+import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from rich.console import Console
 from rich.progress import track
 import requests
+
+DEVICES_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "devices.json")
+
+
+def load_nicknames() -> dict:
+    """Load device nicknames from the local devices.json file."""
+    try:
+        with open(DEVICES_FILE, "r") as f:
+            return json.load(f)
+    except Exception:
+        return {}
 
 console = Console()
 
@@ -92,11 +105,15 @@ def scan_subnet(subnet: str) -> list[dict]:
             if result:
                 online_hosts.append(result)
 
-    # Enrich with MAC and vendor info
+    # Load nicknames
+    nicknames = load_nicknames()
+
+    # Enrich with MAC, vendor, and nickname
     console.print("\n[bold cyan]Looking up device vendors...[/bold cyan]\n")
     for host in online_hosts:
         mac = get_mac_address(host["ip"])
         host["mac"] = mac or "Unknown"
         host["vendor"] = get_vendor(mac) if mac else "Unknown"
+        host["nickname"] = nicknames.get(host["ip"], "Unknown Device")
 
     return online_hosts

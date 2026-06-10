@@ -13,6 +13,7 @@ console = Console()
 def display_hosts(hosts: list[dict]) -> None:
     table = Table(title="Online Hosts")
     table.add_column("IP Address", style="cyan", no_wrap=True)
+    table.add_column("Name", style="bold white")
     table.add_column("Hostname", style="green")
     table.add_column("MAC Address", style="dim")
     table.add_column("Vendor", style="yellow")
@@ -21,6 +22,7 @@ def display_hosts(hosts: list[dict]) -> None:
     for host in sorted(hosts, key=lambda x: x["ip"]):
         table.add_row(
             host["ip"],
+            host.get("nickname", "Unknown Device"),
             host["hostname"],
             host.get("mac", "Unknown"),
             host.get("vendor", "Unknown"),

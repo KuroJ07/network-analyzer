@@ -216,11 +216,12 @@
       <thead>
         <tr>
           <th>IP Address</th>
-          <th>Hostname</th>
-          <th>MAC Address</th>
-          <th>Vendor</th>
-          <th>Open Ports</th>
-          <th>Risk</th>
+<th>Name</th>
+<th>Hostname</th>
+<th>MAC Address</th>
+<th>Vendor</th>
+<th>Open Ports</th>
+<th>Risk</th>
         </tr>
       </thead>
       <tbody id="scan-table">
@@ -362,6 +363,7 @@
         return `
           <tr>
             <td>${h.ip}</td>
+            <td>${h.nickname || "Unknown Device"}</td>
             <td>${h.hostname}</td>
             <td>${h.mac || "Unknown"}</td>
             <td>${h.vendor || "Unknown"}</td>
