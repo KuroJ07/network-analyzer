@@ -232,3 +232,38 @@ pytest tests/ -v
   and scan #2, then leaving by scan #3 — a real sleep/wake cycle caught
   in real time
 - Full timestamped event log recorded for all activity
+
+## Web Dashboard
+**Status:** Complete
+
+### What was built
+- `src/dashboard.py` — Flask web server with three API endpoints:
+  /api/devices, /api/events, /api/scan
+- `src/templates/index.html` — single page dashboard showing live scan
+  results, known devices, event history, and summary stats
+
+### How to run
+
+cd src
+python dashboard.py
+
+Then open http://127.0.0.1:5000 in a browser.
+
+### Key decisions
+- Kept frontend as plain HTML/JS — no React or Node needed, runs anywhere
+  Python runs
+- API endpoints return JSON so the dashboard could be replaced or extended
+  without changing the backend
+- Live scan runs on demand via button — not automatic, to avoid hammering
+  the network
+
+### What it shows
+- Stats row — total devices, online count, events logged, risky ports
+- Live scan table — IP, hostname, MAC, vendor, open ports, risk status
+- Known devices table — full history from SQLite database
+- Recent events table — timestamped join/leave log
+- Auto-refreshes devices and events every 30 seconds
+
+### New finding
+- 10.0.0.xxx identified as Qingdao Intelligent & Precise Electronics
+  (likely a Hisense or TCL smart TV)
