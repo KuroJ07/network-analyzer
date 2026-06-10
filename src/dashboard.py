@@ -1,43 +1,48 @@
 from flask import Flask, render_template, jsonify
 from utils.db import get_all_devices, get_recent_events
 from utils.network import get_local_ip, get_subnet
-from scanners.host_scanner import scan_subnet
+from scanners.host_scanner import scan_subnet, load_nicknames
 from scanners.port_scanner import scan_ports
+import json
 
 app = Flask(__name__)
 
 
 @app.route("/")
 def index():
-    """Main dashboard page."""
     return render_template("index.html")
 
 
 @app.route("/api/devices")
 def api_devices():
-    """Return all known devices as JSON."""
     devices = get_all_devices()
-    return jsonify([dict(d) for d in devices])
+    nicknames = load_nicknames()
+    result = []
+    for d in [dict(d) for d in devices]:
+        d["nickname"] = nicknames.get(d["ip"], "Unknown Device")
+        result.append(d)
+    return jsonify(result)
 
 
 @app.route("/api/events")
 def api_events():
-    """Return recent events as JSON."""
     events = get_recent_events(limit=50)
-    return jsonify([dict(e) for e in events])
+    nicknames = load_nicknames()
+    result = []
+    for e in [dict(e) for e in events]:
+        e["nickname"] = nicknames.get(e["ip"], "Unknown Device")
+        result.append(e)
+    return jsonify(result)
 
 
 @app.route("/api/scan")
 def api_scan():
-    """Run a live scan and return results as JSON."""
     local_ip = get_local_ip()
     subnet = get_subnet(local_ip)
     hosts = scan_subnet(subnet)
-
     for host in hosts:
         ports = scan_ports(host["ip"])
         host["ports"] = ports
-
     return jsonify({
         "subnet": subnet,
         "local_ip": local_ip,

@@ -239,10 +239,10 @@
       <thead>
         <tr>
           <th>IP Address</th>
-          <th>Hostname</th>
-          <th>First Seen</th>
-          <th>Last Seen</th>
-          <th>Status</th>
+<th>Name</th>
+<th>First Seen</th>
+<th>Last Seen</th>
+<th>Status</th>
         </tr>
       </thead>
       <tbody id="devices-table">
@@ -260,9 +260,9 @@
       <thead>
         <tr>
           <th>Timestamp</th>
-          <th>IP Address</th>
-          <th>Hostname</th>
-          <th>Event</th>
+<th>IP Address</th>
+<th>Name</th>
+<th>Event</th>
         </tr>
       </thead>
       <tbody id="events-table">
@@ -292,7 +292,7 @@
       tbody.innerHTML = devices.map(d => `
         <tr>
           <td>${d.ip}</td>
-          <td>${d.hostname}</td>
+          <td>${d.nickname || d.hostname}</td>
           <td>${d.first_seen}</td>
           <td>${d.last_seen}</td>
           <td>
@@ -324,7 +324,7 @@
         <tr>
           <td>${e.timestamp}</td>
           <td>${e.ip}</td>
-          <td>${e.hostname}</td>
+          <td>${e.nickname || e.hostname}</td>
           <td>
             <span class="badge ${e.event_type === 'joined' ? 'badge-green' : 'badge-red'}">
               ${e.event_type === 'joined' ? '▲ Joined' : '▼ Left'}
